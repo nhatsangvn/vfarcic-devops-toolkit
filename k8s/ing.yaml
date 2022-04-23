@@ -1,6 +1,6 @@
 ---
 
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: devops-toolkit
@@ -19,4 +19,4 @@ spec:
            name: devops-toolkit
            port:
              number: 80
-    host: devopstoolkitseries.com
+    host: devops.sohan.cloud
