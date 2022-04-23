@@ -1,7 +1,11 @@
 {{- if .Values.ingress.enabled }}
 ---
 
-apiVersion: networking.k8s.io/v1
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1
+{{ else }}
+apiVersion: extensions/v1beta1
+{{ end -}}
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}
@@ -9,18 +13,14 @@ metadata:
     draft: {{ default "draft-app" .Values.draft }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
   annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
   - http:
       paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-           name: {{ template "fullname" . }}
-           port:
-             number: 80
+      - backend:
+          serviceName: {{ template "fullname" . }}
+          servicePort: 80
     host: {{ .Values.ingress.host }}
 {{- end}}
 
